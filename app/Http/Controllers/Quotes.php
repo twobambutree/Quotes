@@ -4,18 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Quote;
 use Illuminate\Http\Request;
+use App\Repositories\Repository;
 
 class Quotes extends Controller
 {
+	protected $model;
+	
+	
 	public function index(Quote $quote)
 	{
 		return view('home');
+//		return Quote::latest()->get();
+//		return $this->model->all();
 	}
 	
 	public function getQuotes(Quote $quote)
 	{
-		$quotes = $quote->get();
-		dd($quotes);
+//		$quotes = $quote->get();
+//		dd($quotes);
+		return Quote::latest()->get();
 	}
 	
 	public function setQuotes()
@@ -46,6 +53,7 @@ class Quotes extends Controller
 	{
 		return Quote::findOrFail($quote);
 	}
+	
 	
 	public function random()
 	{

@@ -45118,10 +45118,56 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-	mounted: function mounted() {
-		console.log('Component mounted.');
+	data: function data() {
+		return {
+			list: [],
+			quote: {
+				id: '',
+				text: '',
+				author: ''
+			}
+		};
+	},
+	created: function created() {
+		this.fetchQuoteList();
+	},
+
+
+	methods: {
+		fetchQuoteList: function fetchQuoteList() {
+			var _this = this;
+
+			axios.get('/quotes/').then(function (res) {
+				_this.list = res.data;
+			});
+		},
+		getQuote: function getQuote() {
+			var _this2 = this;
+
+			axios.get('/quotes/quotd/' + this.id + '/').then(function (res) {
+				_this2.id = '';
+				_this2.quote = res.data[0]; //for some reason data is coming in as observer object of [0] to get the array
+				console.log(res.data[0]);
+			}).catch(function (err) {
+				return console.error(err);
+			});
+		},
+		getRandom: function getRandom() {
+			var _this3 = this;
+
+			axios.get('/quotes/random/').then(function (res) {
+				_this3.quote = res.data;
+				console.log(res.data);
+			}).catch(function (err) {
+				return console.error(err);
+			});
+		}
 	}
 });
 
@@ -45133,58 +45179,106 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row" }, [
+      _c("h1", [_vm._v("Quotes")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-sm-6" }, [
+        _c(
+          "button",
+          {
+            staticClass: "btn btn-primary",
+            attrs: { type: "submit" },
+            on: {
+              click: function($event) {
+                return _vm.getRandom()
+              }
+            }
+          },
+          [_vm._v("Random Quote of the day")]
+        )
+      ]),
+      _vm._v(" "),
+      _c(
+        "form",
+        {
+          attrs: { action: "#" },
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.getQuote()
+            }
+          }
+        },
+        [
+          _c("div", { staticClass: "col-sm-6" }, [
+            _c("div", { staticClass: "input-group" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.id,
+                    expression: "id"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: {
+                  type: "text",
+                  name: "id",
+                  placeholder: "Enter a date...",
+                  autofocus: ""
+                },
+                domProps: { value: _vm.id },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.id = $event.target.value
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _vm._m(0)
+            ])
+          ])
+        ]
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "panel panel-default" }, [
+        _vm._m(1),
+        _vm._v(" "),
+        _c("div", { staticClass: "panel-body" }, [
+          _c("h2", [_vm._v(_vm._s(_vm.quote.text))]),
+          _vm._v(" "),
+          _c("h4", [_vm._v(_vm._s(_vm.quote.author))])
+        ])
+      ])
+    ])
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-md-8 col-md-offset-2" }, [
-          _c("div", { staticClass: "panel panel-default" }, [
-            _c("div", { staticClass: "panel-heading" }, [
-              _vm._v("Quote Component")
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "panel-body" }, [
-              _c("div", { staticClass: "col-md-6" }, [
-                _c("div", { staticClass: "input-group" }, [
-                  _c("input", {
-                    staticClass: "form-control",
-                    attrs: { type: "text", placeholder: "Enter a day ..." }
-                  }),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "input-group-btn" }, [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-default",
-                        attrs: { type: "button" }
-                      },
-                      [_vm._v("Submit")]
-                    )
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-md-6" }, [
-                _c("div", { staticClass: "input-group" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-default",
-                      attrs: { type: "button" }
-                    },
-                    [_vm._v("Random")]
-                  )
-                ])
-              ])
-            ])
-          ])
-        ])
-      ])
+    return _c("span", { staticClass: "input-group-btn" }, [
+      _c(
+        "button",
+        { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+        [_vm._v("Quote of the day")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "panel-heading" }, [
+      _c("h1", { staticClass: "panel-title" }, [_vm._v("Quote")])
     ])
   }
 ]

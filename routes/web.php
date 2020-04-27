@@ -7,7 +7,7 @@
 //	Route::get('/', 'Quotes@getQuotes');
 Auth::routes();
 
-Route::get('/', 'QUotes@index');
+Route::get('/', 'Quotes@index');
 
 Route::get('/quotes', 'Quotes@getQuotes');
 
