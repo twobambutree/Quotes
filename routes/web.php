@@ -1,10 +1,5 @@
 <?php
 
-//Route::get('/', function () {
-//    return view('welcome');
-//});
-
-//	Route::get('/', 'Quotes@getQuotes');
 Auth::routes();
 
 Route::get('/', 'Quotes@index');
