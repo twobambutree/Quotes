@@ -9,7 +9,7 @@ class Quotes extends Controller
 {
 	public function index(Quote $quote)
 	{
-		//
+		return view('home');
 	}
 	
 	public function getQuotes(Quote $quote)

@@ -7,8 +7,9 @@
 //	Route::get('/', 'Quotes@getQuotes');
 Auth::routes();
 
-//Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/', 'Quotes@getQuotes');
+Route::get('/', 'QUotes@index');
+
+Route::get('/quotes', 'Quotes@getQuotes');
 
 Route::get('/setQuotes', 'Quotes@setQuotes');
 
