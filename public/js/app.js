@@ -1192,19 +1192,9 @@ __webpack_require__(13);
 window.Vue = __webpack_require__(35);
 
 /**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
+ * Datetime library
  */
 
-// import Vue from 'vue'
-
-// You need a specific loader for CSS files
-
-
-// Vue.use(Datetime)
-
-// import { Datetime } from 'vue-datetime';
 
 Vue.component('datetime', __WEBPACK_IMPORTED_MODULE_0_vue_datetime__["Datetime"]);
 
@@ -55385,20 +55375,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
 	data: function data() {
 		return {
 			list: [],
 			date: null,
-			day: null,
 			quote: {
 				id: '',
 				text: '',
@@ -55407,6 +55389,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 		};
 	},
 	created: function created() {
+		// to get the full list of quotes
 		this.fetchQuoteList();
 	},
 
@@ -55420,26 +55403,35 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			});
 		},
 		getQuote: function getQuote() {
-			// axios.get('/quotes/quotd/' + this.id+'/')
-			// axios.get('/quotes/quotd/' + this.date+'/')
-			// 	.then((res) => {
-			//
-			// 		this.id = '';
-			// 		this.quote = res.data[0]; //for some reason data is coming in as observer object of [0] to get the array
-			// 		console.log(res.data[0]);
-			// 	})
-			// 	.catch((err) => console.error(err));
-			console.log(date);
-		},
-		getRandom: function getRandom() {
 			var _this2 = this;
 
+			axios.get('/quotes/quotd/' + this.subStr(this.date) + '/').then(function (res) {
+				_this2.quote = res.data[0]; //for some reason data is coming in as observer object of [0] to get the array
+				_this2.quote.author = _this2.authorCheck(_this2.quote.author);
+				console.log(res.data[0]);
+				console.log(_this2.subStr(_this2.date));
+			}).catch(function (err) {
+				return console.error(err, alert("You must enter a date!"));
+			});
+		},
+		getRandom: function getRandom() {
+			var _this3 = this;
+
 			axios.get('/quotes/random/').then(function (res) {
-				_this2.quote = res.data;
+				_this3.quote = res.data;
+				_this3.quote.author = _this3.authorCheck(_this3.quote.author);
 				console.log(res.data);
 			}).catch(function (err) {
 				return console.error(err);
 			});
+		},
+		subStr: function subStr(string) {
+			//bringing in substring function
+			return string.substring(10, 8);
+		},
+		authorCheck: function authorCheck(string) {
+			//checking for unknown author
+			if (string == null) return 'Unknown';else return string;
 		}
 	}
 });
@@ -55456,11 +55448,11 @@ var render = function() {
     _c("div", { staticClass: "row" }, [
       _c("h1", [_vm._v("Quotes")]),
       _vm._v(" "),
-      _c("div", { staticClass: "col-sm-6" }, [
+      _c("div", { staticClass: "navbar-form navbar-left" }, [
         _c(
           "button",
           {
-            staticClass: "btn btn-primary",
+            staticClass: "btn btn-default",
             attrs: { type: "submit" },
             on: {
               click: function($event) {
@@ -55468,16 +55460,17 @@ var render = function() {
               }
             }
           },
-          [_vm._v("Random Quote of the day")]
+          [_vm._v("Get a random quote")]
         )
       ]),
       _vm._v(" "),
       _c(
         "form",
         {
+          staticClass: "navbar-form navbar-right",
           attrs: { action: "#" },
           on: {
-            ok: function($event) {
+            submit: function($event) {
               $event.preventDefault()
               return _vm.getQuote()
             }
@@ -55486,9 +55479,10 @@ var render = function() {
         [
           _c(
             "div",
-            { staticClass: "example-inputs" },
+            { staticClass: "form-group" },
             [
               _c("datetime", {
+                attrs: { placeholder: "Enter the date.." },
                 model: {
                   value: _vm.date,
                   callback: function($$v) {
@@ -55496,16 +55490,15 @@ var render = function() {
                   },
                   expression: "date"
                 }
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "values" }, [
-                _c("p", [
-                  _c("strong", [_vm._v("Value:")]),
-                  _vm._v(" " + _vm._s(_vm.date))
-                ])
-              ])
+              })
             ],
             1
+          ),
+          _vm._v(" "),
+          _c(
+            "button",
+            { staticClass: "btn btn-default", attrs: { type: "submit" } },
+            [_vm._v("Get a quote of the day")]
           )
         ]
       )

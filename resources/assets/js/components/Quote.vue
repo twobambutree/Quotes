@@ -2,32 +2,25 @@
 	<div class="container">
 		<div class='row'>
 			<h1>Quotes</h1>
-			<div class="col-sm-6">
-				<button v-on:click="getRandom()" type="submit" class="btn btn-primary">Random Quote of the day</button>
+			<div class="navbar-form navbar-left">
+				<button @click="getRandom()" type="submit" class="btn btn-default">Get a random quote</button>
 			</div>
-			<form action="#" @ok.prevent="getQuote()">
-<!--				<div class="col-sm-6">-->
-<!--					<div class="input-group">-->
-<!--						<input v-model="id" type="text" name="id" class="form-control" placeholder="Enter a date..." autofocus>-->
-						
-						<div class="example-inputs">
-							<datetime v-model="date"></datetime>
-							<div class="values"><p><strong>Value:</strong> {{ date }}</p></div>
-						</div>
-<!--						<span class="input-group-btn">-->
-<!--							<button type="submit" class="btn btn-primary">Quote of the day</button>-->
-<!--						</span>-->
-<!--					</div>-->
-<!--				</div>-->
+			<form class="navbar-form navbar-right" action="#" @submit.prevent="getQuote()">
+				<div class="form-group">
+					<datetime v-model="date" placeholder="Enter the date.." ></datetime>
+				</div>
+				<button type="submit" class="btn btn-default">Get a quote of the day</button>
 			</form>
 		</div>
+		
 		<div class="row">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					<h1 class="panel-title">Quote</h1>
 				</div>
 				<div  class="panel-body">
-					<h2>{{quote.text}}</h2> <h4>{{quote.author}}</h4>
+					<h2>{{quote.text}}</h2>
+					<h4>{{quote.author}}</h4>
 				</div>
 			</div>
 		</div>
@@ -40,7 +33,6 @@
 			return {
 				list: [],
 				date: null,
-				day: null,
 				quote: {
 					id: '',
 					text: '',
@@ -49,7 +41,7 @@
 			};
 		},
 		
-		created() {
+		created() { // to get the full list of quotes
 			this.fetchQuoteList();
 		},
 		
@@ -61,26 +53,39 @@
 			},
 			
 			getQuote() {
-				// axios.get('/quotes/quotd/' + this.id+'/')
-				// axios.get('/quotes/quotd/' + this.date+'/')
-				// 	.then((res) => {
-				//
-				// 		this.id = '';
-				// 		this.quote = res.data[0]; //for some reason data is coming in as observer object of [0] to get the array
-				// 		console.log(res.data[0]);
-				// 	})
-				// 	.catch((err) => console.error(err));
-				console.log(date)
+				axios.get('/quotes/quotd/' + this.subStr(this.date) +'/')
+				.then((res) => {
+					this.quote = res.data[0]; //for some reason data is coming in as observer object of [0] to get the array
+					this.quote.author = this.authorCheck(this.quote.author);
+					console.log(res.data[0]);
+					console.log(this.subStr(this.date));
+				})
+				.catch((err) => console.error(
+					err,
+					alert("You must enter a date!")
+				));
 			},
 			
 			getRandom() {
 				axios.get('/quotes/random/')
 					.then((res) => {
 						this.quote = res.data;
+						this.quote.author = this.authorCheck(this.quote.author);
 						console.log(res.data);
 					})
 					.catch((err) => console.error(err));
 			},
+			
+			subStr(string) { //bringing in substring function
+				return string.substring(10,8);
+			},
+			
+			authorCheck(string) { //checking for unknown author
+				if (string == null)
+					return 'Unknown';
+				else
+					return string;
+			}
 		}
 	}
 </script>
