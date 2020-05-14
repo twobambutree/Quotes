@@ -27,7 +27,7 @@ class Quotes extends Controller
 		Quote::truncate();
 		$data = array();
 		$prevText = null;
-		for ($x = 0; $x <= 39; $x++) {
+		for ($x = 0; $x <= 39; $x++) { //may be this part could be done better
 			$content = json_decode(file_get_contents('http://api.forismatic.com/api/1.0/?format=json&lang=en&method=getQuote'), true);
 			if ($content == null) {
 				$x--;
